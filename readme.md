@@ -1,6 +1,8 @@
 # MANZANA
 O novo framework para desenvolvimento de objetos de aprendizagem do NEAD
+
 -----
+
 ## Objetivo
 Este framework foi desenvolvido em forma de templates ao longo dos últimos dois anos para facilitar o desenvolvimento de pequenas interações com fins pedagógicos dentro de pacotes SCORM, mas de modo a permitir uma flexibilidade que as ferramentas prontas interativas que existem não possuem.
 
@@ -12,6 +14,7 @@ sets =
   audio: false
   clickarea: false
   quiz: true
+  slideshow: false
 ```
 
 É possível habilitar mais de um módulo ao mesmo tempo, mas é preciso fazer os ajustes necessários no restante da interação.
