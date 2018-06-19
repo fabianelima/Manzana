@@ -35,11 +35,12 @@
   });
 
   $(function() {
-    var audio, clickarea, func, quiz, sets;
+    var audio, clickarea, func, quiz, sets, slideshow;
     sets = {
-      sound: false,
-      clickable: false,
-      quiz: false
+      audio: false,
+      clickarea: false,
+      quiz: false,
+      slideshow: true
     };
     audio = {
       trilha: new Audio('assets/audio/trilha.mp3'),
@@ -182,8 +183,10 @@
         }
       },
       start: function() {
-        $('.content').append('<div class="quiz"></div>');
-        return quiz.rNumber();
+        if (sets.quiz === true) {
+          $('.content').append('<div class="quiz"></div>');
+          return quiz.rNumber();
+        }
       },
       selectAlt: function($el) {
         quiz.alt = $el.index();
@@ -253,6 +256,64 @@
         })["catch"](function(fromReject) {});
       }
     };
+    slideshow = {
+      count: 0,
+      data: [
+        {
+          img: 'assets/img/img1.png',
+          txt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        }, {
+          img: 'assets/img/img2.png',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }, {
+          img: 'assets/img/img3.png',
+          txt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        }, {
+          img: 'assets/img/img4.png',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }, {
+          img: 'assets/img/img5.png',
+          txt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        }
+      ],
+      start: function() {
+        var i, j, k, len, ref, results;
+        $('.content').append('<div class="slides"></div> <div class="ctrl"> <button class="next">></button> <button class="prev"><</button> </div>');
+        ref = slideshow.data;
+        results = [];
+        for (j = k = 0, len = ref.length; k < len; j = ++k) {
+          i = ref[j];
+          results.push($('.slides').append('<section> <div>' + slideshow.data[j].txt + '</div> <img src="' + slideshow.data[j].img + '"> </section>'));
+        }
+        return results;
+      },
+      slide: function($el) {
+        if ($el.attr('class') === 'next') {
+          slideshow.count++;
+          $('.prev').css({
+            pointerEvents: 'auto',
+            opacity: '1'
+          });
+          if (slideshow.count < slideshow.data.length) {
+            $('.slides section').fadeOut();
+            $('.slides section:nth-child(' + (slideshow.count + 1) + ')').fadeIn();
+          } else {
+            func.end();
+          }
+        }
+        if ($el.attr('class') === 'prev') {
+          slideshow.count--;
+          $('.slides section').fadeOut();
+          $('.slides section:nth-child(' + (slideshow.count + 1) + ')').fadeIn();
+          if (slideshow.count === 0) {
+            return $('.prev').css({
+              pointerEvents: 'none',
+              opacity: '0.6'
+            });
+          }
+        }
+      }
+    };
     func = {
       help: function() {
         audio.clique.play();
@@ -283,12 +344,10 @@
         return $('.dimmer').fadeOut();
       },
       start: function() {
-        sets.audio = false;
         audio.start();
-        sets.clickarea = false;
         clickarea.start();
-        sets.quiz = true;
         quiz.start();
+        slideshow.start();
         func.dismiss();
         return $('.content').fadeIn();
       }
@@ -319,6 +378,11 @@
     $(document).on('click', '.nxt', function() {
       if (sets.quiz === true) {
         return quiz.nxt();
+      }
+    });
+    $(document).on('click', '.ctrl *', function() {
+      if (sets.slideshow === true) {
+        return slideshow.slide($(this));
       }
     });
     $(document).on('click', '.start', function() {

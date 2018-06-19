@@ -195,6 +195,47 @@ main {
 			}
 			section:nth-child(1) { display: block; }
 		}
+
+		.ctrl {
+			.next {
+				font-size: 1.5em;
+				padding: 0.3em 0.7em;
+				position: absolute;
+				right: 2%;
+				top: 40%;
+			}
+
+			.prev {
+				font-size: 1.5em;
+				padding: 0.3em 0.7em;
+				position: absolute;
+				left: 2%;
+				top: 40%;
+				opacity: 0.6;
+				pointer-events: none;
+			}
+		}
+
+		.slides {
+			section {
+				position: relative;
+				width: 100%;
+				display: none;
+
+				div {
+					position: absolute;
+					margin: 1em;
+					padding: 1em;
+					background: @maincolor;
+					color: white;
+					border-radius: 0.5em;
+					text-align: center;
+					bottom: 0;
+				}
+			}
+
+			section:nth-child(1) { display: block; }
+		}
 	}
 
 	.blink { animation: blink 0.5s linear infinite; }

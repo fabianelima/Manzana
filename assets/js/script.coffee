@@ -29,9 +29,10 @@ $(window).on 'load', -> preload(imgs)
 # ----- Módulos e dados ----- #
 $ ->
 	sets =
-		sound: false
-		clickable: false
+		audio: false
+		clickarea: false
 		quiz: false
+		slideshow: true
 
 	audio =
 		trilha: new Audio('assets/audio/trilha.mp3')
@@ -183,8 +184,9 @@ $ ->
 				quiz.rNumber()
 
 		start: ->
-			$('.content').append('<div class="quiz"></div>')
-			quiz.rNumber()
+			if sets.quiz is true
+				$('.content').append('<div class="quiz"></div>')
+				quiz.rNumber()
 
 		selectAlt: ($el) ->
 			quiz.alt = $el.index()
@@ -232,6 +234,64 @@ $ ->
 
 			.catch (fromReject) -> return
 
+	slideshow =
+		count: 0
+		data: [
+			{
+				img: 'assets/img/img1.png'
+				txt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+			}
+			{
+				img: 'assets/img/img2.png'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+			}
+			{
+				img: 'assets/img/img3.png'
+				txt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+			}
+			{
+				img: 'assets/img/img4.png'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+			}
+			{
+				img: 'assets/img/img5.png'
+				txt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+			}
+		]
+
+		start: ->
+			$('.content').append('
+			<div class="slides"></div>
+			<div class="ctrl">
+				<button class="next">></button>
+				<button class="prev"><</button>
+			</div>')
+
+			for i, j in slideshow.data
+				$('.slides').append('
+					<section>
+						<div>' + slideshow.data[j].txt + '</div>
+						<img src="' + slideshow.data[j].img + '">
+					</section>
+				')
+
+		slide: ($el) ->
+			if $el.attr('class') is 'next'
+				slideshow.count++
+				$('.prev').css { pointerEvents: 'auto', opacity: '1' }
+
+				if slideshow.count < slideshow.data.length
+					$('.slides section').fadeOut()
+					$('.slides section:nth-child(' + (slideshow.count + 1) + ')').fadeIn()
+				else func.end()
+
+			if $el.attr('class') is 'prev'
+				slideshow.count--
+				$('.slides section').fadeOut()
+				$('.slides section:nth-child(' + (slideshow.count + 1) + ')').fadeIn()
+
+				if slideshow.count is 0 then $('.prev').css { pointerEvents: 'none', opacity: '0.6' }
+
 	func =
 		help: ->
 			audio.clique.play()
@@ -247,7 +307,7 @@ $ ->
 			$('.dimmer').delay(1000).fadeIn()
 			$('.modal').html('<h1>Finalizando...</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>')
 
-			if sets.quiz is true
+			if sets.quiz is true	# melhorar isso
 				if quiz.score > 1 then $('.modal').html('<h1>Você acertou ' + quiz.score + ' questões!</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>')
 				else if quiz.score < 1 then $('.modal').html('<h1>Você não acertou nenhuma questão!</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>')
 				else $('.modal').html('<h1>Você acertou uma questão!</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>')
@@ -259,14 +319,10 @@ $ ->
 			$('.dimmer').fadeOut()
 
 		start: ->
-			sets.audio = false
 			audio.start()
-
-			sets.clickarea = false
 			clickarea.start()
-
-			sets.quiz = true
 			quiz.start()
+			slideshow.start()
 
 			func.dismiss()
 			$('.content').fadeIn()
@@ -279,6 +335,7 @@ $ ->
 	$(document).on 'click', '.alts li', -> if sets.quiz is true then quiz.selectAlt $(this)
 	$(document).on 'click', '.verify', -> if sets.quiz is true then quiz.verify()
 	$(document).on 'click', '.nxt', -> if sets.quiz is true then quiz.nxt()
+	$(document).on 'click', '.ctrl *', -> if sets.slideshow is true then slideshow.slide $(this)
 
 	$(document).on 'click', '.start', -> func.start()
 	$(document).on 'click', '.help', -> func.help()
