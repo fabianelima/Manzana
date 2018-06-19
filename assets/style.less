@@ -1,0 +1,158 @@
+/**STYLE: Template versão 4.0 **/
+
+* { margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent; }
+
+@maincolor: #006c7f;
+
+body {
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	-webkit-text-size-adjust: none;
+	background: url('img/loading.gif') no-repeat center;
+}
+
+main {
+	opacity: 0;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: #e7e7e7;
+	max-width: 1280px;
+	max-height: 720px;
+	overflow: hidden;
+	margin: auto;
+	font-size: 1.5em;
+	font-weight: 400;
+	font-family: 'Open Sans', sans-serif;
+	box-shadow: 0 0 1.5em #404040;
+	border-radius: 0.2em;
+
+	img { width: 100%; display: block; }
+	h1, h2, h3 { font-size: 1.5em; margin-bottom: 0.5em; color: @maincolor; text-transform: uppercase; }
+	p { margin-bottom: 0.5em; }
+	ul, ol { margin-left: 2em; text-align: left; }
+
+	button {
+		padding: 0.3em 2em;
+		margin-top: 0.7em;
+		background: @maincolor;
+		border-radius: 1em;
+		cursor: pointer;
+		text-transform: uppercase;
+		color: white;
+		font-family: inherit;
+		font-weight: bold;
+		box-sizing: border-box;
+	}
+
+	button:hover { box-shadow: 0 0.1em 0.1em #404040; }
+	button:active { transform: translateY(0.1em); }
+
+	.tip {
+		border-bottom: 0.08em dotted @maincolor;
+		cursor: pointer;
+		position: relative;
+
+		.tooltip {
+			min-width: 100%;
+			top: -120%;
+			left: 0;
+			color: white;
+			background: @maincolor;
+			padding: 0.2em 0.4em;
+			border-radius: 0.2em;
+			font-size: 80%;
+			box-shadow: 0 0.1em 0.5em #404040;
+			text-align: center;
+			position: absolute;
+			visibility: hidden;
+		}
+
+		.tooltip:after {
+			position: absolute;
+			content: '';
+			top: 100%;
+			left: 50%;
+			margin-left: -0.5em;
+			border-width: 0.5em;
+			border-style: solid;
+			border-color: @maincolor transparent transparent transparent;
+		}
+	}
+	.tip:hover .tooltip, .tip:active .tooltip { visibility: visible; }
+
+	.help {
+		position: absolute;
+		padding: 0.05em 0.5em;
+		margin-top: 0;
+		top: 2%;
+		left: 1.4%;
+		border-radius: 50%;
+		font-size: 2em;
+		z-index: 4;
+		cursor: pointer;
+	}
+
+	.audio {
+		position: absolute;
+		padding: 0.3em 0.45em;
+		z-index: 7;
+		font-size: 2em;
+		width: 5.6%;
+		left: 1.4%;
+		top: 9%;
+	}
+
+	.dimmer {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		background: rgba(0,0,0,0.6);
+		z-index: 6;
+
+		.modal {
+			position: absolute;
+			background: white;
+			width: 56%;
+			padding: 2%;
+			left: 20%;
+			box-shadow: 0 0 1em black;
+			border-radius: 0.5em;
+			text-align: center;
+		}
+	}
+
+	.content {
+		position: absolute;
+		z-index: 5;
+		width: 100%;
+		height: 100%;
+		display: none;
+	}
+
+	.blink { animation: blink 0.5s linear infinite; }
+	@keyframes blink { 50% { opacity: 0; } }
+}
+
+@media screen and (max-width: 1280px) {
+	main {
+		font-size: 1.8vw;
+		width: 100vw;
+		height: 56vw;
+	}
+}
+
+@media screen and (max-height: 720px) {
+	main {
+		font-size: 3.3vh;
+		width: 177vh;
+		height: 100vh;
+	}
+}
