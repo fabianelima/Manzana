@@ -20,4 +20,4 @@ sets =
 É possível habilitar mais de um módulo ao mesmo tempo, mas é preciso fazer os ajustes necessários no restante da interação.
 
 ## Licença
-Este framework é distribuído com a (licença MIT)[https://opensource.org/licenses/MIT].
+Este framework é distribuído com a [licença MIT](https://opensource.org/licenses/MIT).
