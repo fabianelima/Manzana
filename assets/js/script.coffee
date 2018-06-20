@@ -1,9 +1,10 @@
 ###
-	       				  MANZANA 0.1
+	MANZANA v0.1
 	------------------------------------------
-				Desenvolvido em CoffeeScript
- 							por Fabiane Lima
+	Desenvolvido em CoffeeScript
+ 	por Fabiane Lima
 
+	Licença: https://opensource.org/licenses/MIT
 ###
 
 # ----- Pré-carregamento das imagens ----- #
@@ -26,15 +27,15 @@ preload = (imgs) ->
 $(window).on 'load', -> preload(imgs)
 
 
-# ----- Módulos e dados ----- #
+# ----- Módulos e opções ----- #
 $ ->
 	sets =
 		audio: false
 		clickarea: false
 		quiz: false
 		trueORfalse: false
-		slideshow: false
-		dragdrop: true
+		slideshow: true
+		dragdrop: false
 
 	audio =
 		trilha: new Audio('assets/audio/trilha.mp3')

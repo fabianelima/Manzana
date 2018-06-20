@@ -1,9 +1,11 @@
 
 /*
-	       				  MANZANA 0.1
+	MANZANA v0.1
 	------------------------------------------
-				Desenvolvido em CoffeeScript
- 							por Fabiane Lima
+	Desenvolvido em CoffeeScript
+ 	por Fabiane Lima
+
+	Licença: https://opensource.org/licenses/MIT
  */
 
 (function() {
@@ -41,8 +43,8 @@
       clickarea: false,
       quiz: false,
       trueORfalse: false,
-      slideshow: false,
-      dragdrop: true
+      slideshow: true,
+      dragdrop: false
     };
     audio = {
       trilha: new Audio('assets/audio/trilha.mp3'),
