@@ -1,6 +1,6 @@
 
 /*
-	       				  MANZANA 5
+	       				  MANZANA 0.1
 	------------------------------------------
 				Desenvolvido em CoffeeScript
  							por Fabiane Lima
@@ -35,12 +35,14 @@
   });
 
   $(function() {
-    var audio, clickarea, func, quiz, sets, slideshow;
+    var audio, clickarea, dragdrop, func, quiz, sets, slideshow, trueORfalse;
     sets = {
       audio: false,
       clickarea: false,
       quiz: false,
-      slideshow: true
+      trueORfalse: false,
+      slideshow: false,
+      dragdrop: true
     };
     audio = {
       trilha: new Audio('assets/audio/trilha.mp3'),
@@ -51,7 +53,7 @@
           audio.trilha.loop = true;
           audio.trilha.play();
           audio.clique.play();
-          return $('.audio').fadeIn();
+          return $('.content').append('<button class="audio"><img src="assets/img/audio.svg"></button>');
         }
       },
       audio: function() {
@@ -256,6 +258,88 @@
         })["catch"](function(fromReject) {});
       }
     };
+    trueORfalse = {
+      count: 0,
+      score: 0,
+      alt: void 0,
+      data: [
+        {
+          titl: 'Título da questão',
+          text: '1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          answ: true,
+          feed: 'Ut enim ad minim veniam, quis nostrud exercitation.'
+        }, {
+          titl: 'Título da questão',
+          text: '2. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          answ: true,
+          feed: 'Ut enim ad minim veniam, quis nostrud exercitation.'
+        }, {
+          titl: 'Título da questão',
+          text: '3. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          answ: false,
+          feed: 'Ut enim ad minim veniam, quis nostrud exercitation.'
+        }, {
+          titl: 'Título da questão',
+          text: '4. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          answ: false,
+          feed: 'Ut enim ad minim veniam, quis nostrud exercitation.'
+        }, {
+          titl: 'Título da questão',
+          text: '5. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          answ: true,
+          feed: 'Ut enim ad minim veniam, quis nostrud exercitation.'
+        }
+      ],
+      start: function() {
+        var i, j, k, len, ref, results;
+        if (sets.trueORfalse === true) {
+          $('.content').append('<div class="t-or-f"></div>');
+          j = 0;
+          func.dismiss();
+          ref = trueORfalse.data;
+          results = [];
+          for (k = 0, len = ref.length; k < len; k++) {
+            i = ref[k];
+            $('.t-or-f').append('<section> <div class="txt"> <h1>' + trueORfalse.data[j].titl + '</h1> <p>' + trueORfalse.data[j].text + '</p> </div> <div class="ctrl"> <button class="true">verdadeiro</button> <button class="false">falso</button> </div> </section>');
+            results.push(j++);
+          }
+          return results;
+        }
+      },
+      verify: function($el) {
+        $('.ctrl').css({
+          pointerEvents: 'none'
+        });
+        if ($el.attr('class') === 'true') {
+          trueORfalse.alt = true;
+        } else if ($el.attr('class') === 'false') {
+          trueORfalse.alt = false;
+        }
+        $('.dimmer').fadeIn();
+        $('.modal').html('<h1></h1><p>' + trueORfalse.data[trueORfalse.count].feed + '</p><button class="nxt">Próxima</button>');
+        if (trueORfalse.alt === trueORfalse.data[trueORfalse.count].answ) {
+          trueORfalse.score++;
+          return $('.modal h1').html('Resposta correta!');
+        } else {
+          return $('.modal h1').html('Resposta errada!');
+        }
+      },
+      nxt: function() {
+        trueORfalse.count++;
+        if (trueORfalse.count < trueORfalse.data.length) {
+          func.dismiss();
+          $('.t-or-f .ctrl').css({
+            pointerEvents: 'auto'
+          });
+          $('.t-or-f section:nth-child(' + trueORfalse.count + ')').fadeOut();
+          return $('.t-or-f section:nth-child(' + (trueORfalse.count + 1) + ')').fadeIn();
+        } else {
+          return setTimeout(function() {
+            return func.end();
+          }, 500);
+        }
+      }
+    };
     slideshow = {
       count: 0,
       data: [
@@ -278,14 +362,16 @@
       ],
       start: function() {
         var i, j, k, len, ref, results;
-        $('.content').append('<div class="slides"></div> <div class="ctrl"> <button class="next">></button> <button class="prev"><</button> </div>');
-        ref = slideshow.data;
-        results = [];
-        for (j = k = 0, len = ref.length; k < len; j = ++k) {
-          i = ref[j];
-          results.push($('.slides').append('<section> <div>' + slideshow.data[j].txt + '</div> <img src="' + slideshow.data[j].img + '"> </section>'));
+        if (sets.slideshow === true) {
+          $('.content').append('<div class="slideshow"> <div class="slides"></div> <div class="ctrl"> <button class="next">></button> <button class="prev"><</button> </div> </div>');
+          ref = slideshow.data;
+          results = [];
+          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+            i = ref[j];
+            results.push($('.slides').append('<section> <div>' + slideshow.data[j].txt + '</div> <img src="' + slideshow.data[j].img + '"> </section>'));
+          }
+          return results;
         }
-        return results;
       },
       slide: function($el) {
         if ($el.attr('class') === 'next') {
@@ -314,6 +400,75 @@
         }
       }
     };
+    dragdrop = {
+      count: 0,
+      ctrl: [],
+      endit: [],
+      data: [['draggable 1', 'draggable 2', 'draggable 3', 'draggable 4', 'draggable 5', 'draggable 6'], ['draggable 1', 'draggable 2', 'draggable 3', 'draggable 4', 'draggable 5', 'draggable 6']],
+      start: function() {
+        var i, k, len, ref;
+        if (sets.dragdrop === true) {
+          $('.content').append('<div class="drag-drop"> <div class="draggie"></div> <div class="droppie"></div> </div>');
+          func.dismiss();
+          dragdrop.rNumber();
+          ref = dragdrop.data[1];
+          for (k = 0, len = ref.length; k < len; k++) {
+            i = ref[k];
+            $('.droppie').append('<div>' + i + '</div>');
+          }
+          dragdrop.draggie();
+          return dragdrop.droppie();
+        }
+      },
+      rNumber: function() {
+        var randy;
+        randy = Math.floor(Math.random() * dragdrop.data[0].length);
+        if (dragdrop.ctrl.length < dragdrop.data[0].length) {
+          if (dragdrop.ctrl.indexOf(randy) === -1) {
+            dragdrop.ctrl.push(randy);
+            $('.draggie').append('<div>' + dragdrop.data[0][randy] + '</div>');
+          }
+          return dragdrop.rNumber();
+        }
+      },
+      draggie: function() {
+        return $('.draggie').children().draggable({
+          cursor: 'move',
+          revert: function(event, ui) {
+            this.data('uiDraggable').originalPosition = {
+              top: 0,
+              left: 0
+            };
+            return !event;
+          }
+        });
+      },
+      droppie: function() {
+        return $('.droppie').children().droppable({
+          tolerance: 'touch',
+          accept: function(e) {
+            if ($(this).html() === e.html()) {
+              return true;
+            }
+          },
+          drop: function(e, ui) {
+            dragdrop.endit.push($(this).index());
+            $('.ui-draggable-dragging').fadeOut();
+            $(this).css({
+              color: 'black',
+              background: 'white',
+              boxShadow: '0 0 0.5em rgba(0,0,0,0.6)'
+            });
+            if (dragdrop.endit.length === dragdrop.ctrl.length) {
+              $('.draggie').fadeOut();
+              return setTimeout(function() {
+                return func.end();
+              }, 800);
+            }
+          }
+        });
+      }
+    };
     func = {
       help: function() {
         audio.clique.play();
@@ -328,15 +483,24 @@
         audio.clique.play();
         $('.dimmer').delay(1000).fadeIn();
         $('.modal').html('<h1>Finalizando...</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>');
+        $('.modal p').html('Texto de feedback.');
         if (sets.quiz === true) {
           if (quiz.score > 1) {
-            $('.modal').html('<h1>Você acertou ' + quiz.score + ' questões!</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>');
+            $('.modal h1').html('Você acertou ' + quiz.score + ' questões!');
           } else if (quiz.score < 1) {
-            $('.modal').html('<h1>Você não acertou nenhuma questão!</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>');
+            $('.modal h1').html('Você não acertou nenhuma questão!');
           } else {
-            $('.modal').html('<h1>Você acertou uma questão!</h1><p></p><button class="info">Referência</button>&nbsp;&nbsp;<button class="again">Ver novamente</button>');
+            $('.modal h1').html('Você acertou uma questão!');
           }
-          return $('.modal p').html('Texto de feedback.');
+        }
+        if (sets.trueORfalse === true) {
+          if (trueORfalse.score < 1) {
+            return $('.modal h1').html('Você não acertou nenhuma questão!');
+          } else if (trueORfalse.score > 1) {
+            return $('.modal h1').html('Você acertou ' + trueORfalse.score + ' questões!');
+          } else if (trueORfalse.score === 1) {
+            return $('.modal h1').html('Você acertou uma questão!');
+          }
         }
       },
       dismiss: function() {
@@ -348,6 +512,8 @@
         clickarea.start();
         quiz.start();
         slideshow.start();
+        trueORfalse.start();
+        dragdrop.start();
         func.dismiss();
         return $('.content').fadeIn();
       }
@@ -383,6 +549,16 @@
     $(document).on('click', '.ctrl *', function() {
       if (sets.slideshow === true) {
         return slideshow.slide($(this));
+      }
+    });
+    $(document).on('click', '.true, .false', function() {
+      if (sets.trueORfalse === true) {
+        return trueORfalse.verify($(this));
+      }
+    });
+    $(document).on('click', '.nxt', function() {
+      if (sets.trueORfalse === true) {
+        return trueORfalse.nxt();
       }
     });
     $(document).on('click', '.start', function() {
