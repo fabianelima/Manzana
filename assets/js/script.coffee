@@ -1,6 +1,6 @@
 ###
 	MANZANA v0.1
-	------------------------------------------
+	---------------------------------------------
 	Desenvolvido em CoffeeScript
  	por Fabiane Lima
 
@@ -34,8 +34,8 @@ $ ->
 		clickarea: false
 		quiz: false
 		trueORfalse: false
-		slideshow: true
-		dragdrop: false
+		slideshow: false
+		dragdrop: true
 
 	audio =
 		trilha: new Audio('assets/audio/trilha.mp3')
