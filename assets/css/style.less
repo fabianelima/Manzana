@@ -40,22 +40,22 @@ main {
 		margin: 0 0 2em 0;
 		width: 100%;
 		border-collapse: collapse;
-	}
 
-	table th {
-		font-size: 80%;
-		text-align: center;
-		padding: 0.5em;
-		vertical-align: bottom;
-	}
+		th {
+			font-size: 80%;
+			text-align: center;
+			padding: 0.5em;
+			vertical-align: bottom;
+		}
 
-	table td {
-		border-top: 1px solid #999;
-		border-bottom: 1px solid #999;
-		padding: 0.3em 0.7em;
-		text-align: center;
-		vertical-align: middle;
-		width: 5%;
+		td {
+			border-top: 1px solid #999;
+			border-bottom: 1px solid #999;
+			padding: 0.3em 0.7em;
+			text-align: center;
+			vertical-align: middle;
+			width: 5%;
+		}
 	}
 
 	button {
@@ -73,6 +73,20 @@ main {
 
 	button:hover { box-shadow: 0 0.1em 0.1em #404040; }
 	button:active { transform: translateY(0.1em); }
+
+	.ic {
+		position: absolute;
+		padding: 0;
+		margin-top: 0;
+		border-radius: 50%;
+		width: 5.55%;
+		height: 9.7%;
+		border: 0.6em solid @maincolor;
+		z-index: 5;
+	}
+
+	.help 	{	top: 2%; left: 1.4%; background: @maincolor url(../img/help.svg) no-repeat;	}
+	.audio 	{ top: 2%; left: 8%; background: @maincolor url(../img/audio.svg) no-repeat;	}
 
 	.tip {
 		border-bottom: 0.08em dotted @maincolor;
@@ -107,28 +121,6 @@ main {
 	}
 	.tip:hover .tooltip, .tip:active .tooltip { visibility: visible; }
 
-	.help {
-		position: absolute;
-		padding: 0.05em 0.5em;
-		margin-top: 0;
-		top: 2%;
-		left: 1.4%;
-		border-radius: 50%;
-		font-size: 2em;
-		z-index: 4;
-		cursor: pointer;
-	}
-
-	.audio {
-		position: absolute;
-		padding: 0.3em 0.45em;
-		z-index: 7;
-		font-size: 2em;
-		width: 5.6%;
-		left: 1.4%;
-		top: 9%;
-	}
-
 	.dimmer {
 		position: absolute;
 		width: 100%;
@@ -146,7 +138,7 @@ main {
 			width: 56%;
 			padding: 2%;
 			left: 20%;
-			min-height: 40%;
+			min-height: 20%;
 			box-shadow: 0 0 1em black;
 			border-radius: 0.5em;
 			text-align: center;
@@ -320,6 +312,122 @@ main {
 					-moz-user-select: none;
 					user-select: none;
 					box-shadow: inset 0 0 0.5em rgba(0,0,0,0.6);
+				}
+			}
+		}
+
+		.quizdrag {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+
+			.bar {
+				position: absolute;
+				background: black;
+				height: 13%;
+				width: 1.2em;
+				border-radius: 1em;
+				box-sizing: content-box;
+				border: 0.2em solid white;
+				left: 92%;
+				top: 79%;
+				z-index: 5;
+
+				.border {
+					position: absolute;
+					border-radius: 1em;
+					box-sizing: content-box;
+					border: 0.2em solid white;
+					height: 100%;
+					width: 1.2em;
+					margin: -0.2em;
+					z-index: 1;
+				}
+
+				.innerbar {
+					position: absolute;
+					border-bottom-left-radius: 1em;
+					border-bottom-right-radius: 1em;
+					border-top-left-radius: 0.5em;
+					border-top-right-radius: 0.5em;
+					background: @maincolor;
+					width: 100%;
+					height: 100%;
+					bottom: 0;
+					z-index: 0;
+				}
+
+				p {
+					position: absolute;
+					text-align: center;
+					color: white;
+					left: -0.9em;
+					bottom: -2em;
+				}
+			}
+
+			.quizd {
+				position: relative;
+				width: 400%;
+				height: 100%;
+				text-align: center;
+
+				section {
+					position: relative;
+					width: 25%;
+					height: 100%;
+					float: left;
+					z-index: 3;
+
+					.droppie {
+						position: absolute;
+						width: 25%;
+						height: 32%;
+						top: 25%;
+						left: 37%;
+						z-index: 4;
+						display: none;
+						border: 0.2em solid @maincolor;
+						background: white;
+						border-radius: 0.5em;
+					}
+
+					.enun {
+						padding: 4% 12%;
+					}
+
+					.alts {
+						position: absolute;
+						width: 100%;
+						height: 20%;
+						bottom: 5%;
+					}
+
+					ul {
+						margin: 0 5.5em;
+						margin-left: 3em;
+						text-align: center;
+						list-style: none;
+						font-size: 87%;
+
+						li {
+							cursor: pointer;
+							padding: 2.6em 0.6em;
+							margin: 0.7em 0.8em;
+							border-radius: 0.3em;
+							background: white;
+							width: 19%;
+							float: left;
+							user-select: none;
+							z-index: 5;
+						}
+
+						li:hover {
+							color: white !important;
+							background: @seccolor ! important;
+							text-shadow: 0 0 0.5em black;
+						}
+					}
 				}
 			}
 		}

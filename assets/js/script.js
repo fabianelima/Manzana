@@ -1,9 +1,8 @@
 
 /*
-	MANZANA v0.1
-	---------------------------------------------
-	Desenvolvido em CoffeeScript
- 	por Fabiane Lima
+	MANZANA v0.3
+	----------------------------------------------
+	Desenvolvido em CoffeeScript por Fabiane Lima
 
 	Licença: https://opensource.org/licenses/MIT
  */
@@ -11,7 +10,7 @@
 (function() {
   var imgs, preload;
 
-  imgs = ['assets/img/audio.svg', 'assets/img/audio-off.svg'];
+  imgs = ['assets/img/help.svg', 'assets/img/audio.svg', 'assets/img/audio-off.svg'];
 
   preload = function(imgs) {
     var counter;
@@ -37,14 +36,15 @@
   });
 
   $(function() {
-    var audio, clickarea, dragdrop, func, quiz, sets, slideshow, trueORfalse;
+    var audio, clickarea, dragdrop, func, quiz, quizdrag, sets, slideshow, trueORfalse;
     sets = {
       audio: false,
       clickarea: false,
       quiz: false,
       trueORfalse: false,
       slideshow: false,
-      dragdrop: true
+      dragdrop: false,
+      quizdrag: true
     };
     audio = {
       trilha: new Audio('assets/audio/trilha.mp3'),
@@ -55,7 +55,7 @@
           audio.trilha.loop = true;
           audio.trilha.play();
           audio.clique.play();
-          return $('.content').append('<button class="audio"><img src="assets/img/audio.svg"></button>');
+          return $('.content').append('<button class="ic audio"></button>');
         }
       },
       audio: function() {
@@ -63,11 +63,15 @@
         if (sets.audio === false) {
           sets.audio = true;
           audio.trilha.play();
-          return $('.audio').html('<img src="assets/img/audio.svg">');
+          return $('.audio').css({
+            background: '#006c7f url(assets/img/audio.svg) no-repeat'
+          });
         } else if (sets.audio === true) {
           sets.audio = false;
           audio.trilha.pause();
-          return $('.audio').html('<img src="assets/img/audio-off.svg">');
+          return $('.audio').css({
+            background: '#006c7f url(assets/img/audio-off.svg) no-repeat'
+          });
         }
       }
     };
@@ -471,8 +475,168 @@
         });
       }
     };
+    quizdrag = {
+      alt: void 0,
+      pro: void 0,
+      num: void 0,
+      ctrl: [],
+      count: 0,
+      score: 0,
+      error: 0,
+      inOrder: 1,
+      paused: true,
+      starttimer: void 0,
+      data: [
+        {
+          enun: 'Lorem ipsum dolor sit amet',
+          alts: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'],
+          answ: 0
+        }, {
+          enun: 'Lorem ipsum dolor sit amet',
+          alts: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'],
+          answ: 1
+        }, {
+          enun: 'Lorem ipsum dolor sit amet',
+          alts: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'],
+          answ: 2
+        }, {
+          enun: 'Lorem ipsum dolor sit amet',
+          alts: ['Alternativa 1', 'Alternativa 2', 'Alternativa 3', 'Alternativa 4'],
+          answ: 3
+        }
+      ],
+      rNumber: function() {
+        quizdrag.randy = Math.floor(Math.random() * quizdrag.data.length);
+        if (quizdrag.ctrl.length === quizdrag.data.length) {
+          return quizdrag.num = true;
+        } else if (quizdrag.ctrl.length < quizdrag.data.length) {
+          if (quizdrag.ctrl.indexOf(quizdrag.randy) === -1) {
+            quizdrag.ctrl.push(quizdrag.randy);
+            $('.quizdrag .quizd').append('<section id="' + quizdrag.randy + '" class="q"> <div class="enun"> <p>' + quizdrag.data[quizdrag.randy].enun + '</p> </div> <div class="alts"><ul class="draggie"></ul></div> <div class="droppie"></div> </section>');
+            quizdrag.pro = true;
+          }
+          quizdrag.putAlts(quizdrag.randy);
+          quizdrag.rNumber();
+          return quizdrag.goDrag();
+        }
+      },
+      goDrag: function() {
+        var checkPromise;
+        return checkPromise = new Promise(function(resolve, reject) {
+          if (quizdrag.num === true) {
+            return resolve();
+          } else {
+            return reject();
+          }
+        }).then(function(fromResolve) {
+          $('.droppie').fadeIn();
+          quizdrag.draggie();
+          quizdrag.droppie();
+          return quizdrag.timer();
+        })["catch"](function(fromReject) {});
+      },
+      draggie: function() {
+        return $('.draggie').children().draggable({
+          cursor: 'move',
+          revert: function(event, ui) {
+            this.data('uiDraggable').originalPosition = {
+              top: 0,
+              left: 0
+            };
+            return !event;
+          }
+        });
+      },
+      droppie: function() {
+        return $('.droppie').droppable({
+          tolerance: 'touch',
+          accept: function(e) {
+            if (quizdrag.data[quizdrag.count] !== void 0) {
+              if (e.html() === quizdrag.data[quizdrag.count].alts[quizdrag.data[quizdrag.ctrl[quizdrag.count]].answ]) {
+                return true;
+              }
+            }
+          },
+          drop: function(e, ui) {
+            $('.ui-draggable-dragging, .droppie').fadeOut();
+            quizdrag.alt = $(this).index();
+            if (quizdrag.alt === quizdrag.data[quizdrag.ctrl[quizdrag.count]].answ) {
+              quizdrag.score++;
+            } else {
+              quizdrag.error++;
+            }
+            quizdrag.count++;
+            if (quizdrag.count < quizdrag.data.length) {
+              func.dismiss();
+              quizdrag.putAlts();
+              return $('.quizdrag .quizd').animate({
+                left: '-=100%'
+              }, 1800, function() {
+                return $('.droppie').fadeIn();
+              });
+            } else {
+              quizdrag.paused = true;
+              return func.end();
+            }
+          }
+        });
+      },
+      start: function() {
+        if (sets.quizdrag === true) {
+          $('.content').append('<div class="quizdrag"> <div class="bar"> <div class="border"></div> <div class="innerbar"></div> </div> <div class="quizd"></div> </div>');
+          return quizdrag.rNumber();
+        }
+      },
+      putAlts: function(randy) {
+        var testPromise;
+        return testPromise = new Promise(function(resolve, reject) {
+          if (quizdrag.pro === true) {
+            return resolve();
+          } else {
+            return reject();
+          }
+        }).then(function(fromResolve) {
+          var i, j, k, len, ref, results;
+          ref = quizdrag.data[randy].alts;
+          results = [];
+          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+            i = ref[j];
+            $('.quizdrag .quizd section:nth-child(' + quizdrag.inOrder + ') .alts ul').append('<li>' + i + '</li>');
+            if (j === quizdrag.data[randy].alts.length - 1) {
+              results.push(quizdrag.inOrder++);
+            } else {
+              results.push(void 0);
+            }
+          }
+          return results;
+        })["catch"](function(fromReject) {});
+      },
+      timer: function() {
+        var s, starttimer;
+        s = 60;
+        return starttimer = setInterval(function() {
+          if (quizdrag.paused !== true) {
+            if (s > 0) {
+              s--;
+            }
+            if (s <= 0) {
+              s = 0;
+              clearInterval(quizdrag.starttimer);
+              $('.dimmer').fadeIn();
+              $('.modal').html('<h1>Acabou o tempo!</h1><p>Clique no botão abaixo para tentar mais uma vez.</p><button class="again">Jogar novamente</button>');
+            }
+            return $('.bar .innerbar').css({
+              height: (100 / 60) * s + '%'
+            });
+          }
+        }, 1000);
+      }
+    };
     func = {
       help: function() {
+        if (sets.quizdrag === true) {
+          quizdrag.paused = true;
+        }
         audio.clique.play();
         $('.dimmer').fadeIn();
         return $('.modal').html('<h1>Ajuda</h1><p></p><button class="dismiss">Fechar</button>');
@@ -506,6 +670,9 @@
         }
       },
       dismiss: function() {
+        if (sets.quizdrag === true) {
+          quizdrag.paused = false;
+        }
         audio.clique.play();
         return $('.dimmer').fadeOut();
       },
@@ -516,6 +683,7 @@
         slideshow.start();
         trueORfalse.start();
         dragdrop.start();
+        quizdrag.start();
         func.dismiss();
         return $('.content').fadeIn();
       }

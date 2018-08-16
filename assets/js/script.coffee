@@ -1,14 +1,14 @@
 ###
-	MANZANA v0.1
-	---------------------------------------------
-	Desenvolvido em CoffeeScript
- 	por Fabiane Lima
+	MANZANA v0.3
+	----------------------------------------------
+	Desenvolvido em CoffeeScript por Fabiane Lima
 
 	Licença: https://opensource.org/licenses/MIT
 ###
 
 # ----- Pré-carregamento das imagens ----- #
 imgs =	[
+	'assets/img/help.svg'
 	'assets/img/audio.svg'
 	'assets/img/audio-off.svg'
 ]
@@ -35,7 +35,8 @@ $ ->
 		quiz: false
 		trueORfalse: false
 		slideshow: false
-		dragdrop: true
+		dragdrop: false
+		quizdrag: true
 
 	audio =
 		trilha: new Audio('assets/audio/trilha.mp3')
@@ -47,7 +48,7 @@ $ ->
 				audio.trilha.loop = true
 				audio.trilha.play()
 				audio.clique.play()
-				$('.content').append('<button class="audio"><img src="assets/img/audio.svg"></button>')
+				$('.content').append('<button class="ic audio"></button>')
 
 		audio: ->
 			audio.clique.play()
@@ -55,12 +56,12 @@ $ ->
 			if sets.audio is false
 				sets.audio = true
 				audio.trilha.play()
-				$('.audio').html('<img src="assets/img/audio.svg">')
+				$('.audio').css { background: '#006c7f url(assets/img/audio.svg) no-repeat' }
 
 			else if sets.audio is true
 				sets.audio = false
 				audio.trilha.pause()
-				$('.audio').html('<img src="assets/img/audio-off.svg">')
+				$('.audio').css { background: '#006c7f url(assets/img/audio-off.svg) no-repeat' }
 
 	clickarea =
 		pro: undefined
@@ -468,8 +469,173 @@ $ ->
 							func.end()
 						, 800
 
+	quizdrag =
+		alt: undefined
+		pro: undefined
+		num: undefined
+		ctrl: []
+		count: 0
+		score: 0
+		error: 0
+		inOrder: 1
+		paused: true
+		starttimer: undefined
+		data:	[
+					{
+						enun: 'Lorem ipsum dolor sit amet'
+						alts: 	[
+									'Alternativa 1'
+									'Alternativa 2'
+									'Alternativa 3'
+									'Alternativa 4'
+								]
+						answ: 0
+					}
+					{
+						enun: 'Lorem ipsum dolor sit amet'
+						alts: 	[
+									'Alternativa 1'
+									'Alternativa 2'
+									'Alternativa 3'
+									'Alternativa 4'
+								]
+						answ: 1
+					}
+					{
+						enun: 'Lorem ipsum dolor sit amet'
+						alts: 	[
+									'Alternativa 1'
+									'Alternativa 2'
+									'Alternativa 3'
+									'Alternativa 4'
+								]
+						answ: 2
+					}
+					{
+						enun: 'Lorem ipsum dolor sit amet'
+						alts: 	[
+									'Alternativa 1'
+									'Alternativa 2'
+									'Alternativa 3'
+									'Alternativa 4'
+								]
+						answ: 3
+					}
+				]
+
+		rNumber: ->
+			quizdrag.randy = Math.floor(Math.random() * quizdrag.data.length)
+
+			if quizdrag.ctrl.length is quizdrag.data.length then quizdrag.num = true
+			else if quizdrag.ctrl.length < quizdrag.data.length
+				if quizdrag.ctrl.indexOf(quizdrag.randy) is -1
+					quizdrag.ctrl.push quizdrag.randy
+					$('.quizdrag .quizd').append('
+						<section id="' + quizdrag.randy + '" class="q">
+							<div class="enun">
+								<p>' + quizdrag.data[quizdrag.randy].enun + '</p>
+							</div>
+							<div class="alts"><ul class="draggie"></ul></div>
+							<div class="droppie"></div>
+						</section>
+					')
+					quizdrag.pro = true
+
+				quizdrag.putAlts(quizdrag.randy)
+				quizdrag.rNumber()
+				quizdrag.goDrag()
+
+		goDrag: ->
+			checkPromise = new Promise (resolve, reject) ->
+				if quizdrag.num is true then resolve()
+				else reject()
+
+			.then (fromResolve) ->
+				$('.droppie').fadeIn()
+				quizdrag.draggie()
+				quizdrag.droppie()
+				quizdrag.timer()
+
+			.catch (fromReject) -> return
+
+		draggie: ->
+			$('.draggie').children().draggable
+				cursor: 'move'
+				revert: (event, ui) ->
+					this.data('uiDraggable').originalPosition =
+						top: 0
+						left: 0
+					!event
+
+		droppie: ->
+			$('.droppie').droppable
+				tolerance: 'touch'
+				accept: (e) ->
+					if quizdrag.data[quizdrag.count] isnt undefined
+						if e.html() is quizdrag.data[quizdrag.count].alts[quizdrag.data[quizdrag.ctrl[quizdrag.count]].answ] then return true
+
+				drop: (e, ui) ->
+					$('.ui-draggable-dragging, .droppie').fadeOut()
+					quizdrag.alt = $(this).index()
+
+					if quizdrag.alt is quizdrag.data[quizdrag.ctrl[quizdrag.count]].answ then quizdrag.score++
+					else quizdrag.error++
+
+					quizdrag.count++
+
+					if quizdrag.count < quizdrag.data.length
+						func.dismiss()
+						quizdrag.putAlts()
+
+						$('.quizdrag .quizd').animate { left: '-=100%' }, 1800, -> $('.droppie').fadeIn()
+
+					else
+						quizdrag.paused = true
+						func.end()
+
+		start: ->
+			if sets.quizdrag is true
+				$('.content').append('
+					<div class="quizdrag">
+						<div class="bar">
+							<div class="border"></div>
+							<div class="innerbar"></div>
+						</div>
+						<div class="quizd"></div>
+					</div>')
+				quizdrag.rNumber()
+
+		putAlts: (randy) ->
+			testPromise = new Promise (resolve, reject) ->
+				if quizdrag.pro is true then resolve()
+				else reject()
+
+			.then (fromResolve) ->
+				for i, j in quizdrag.data[randy].alts
+					$('.quizdrag .quizd section:nth-child(' + quizdrag.inOrder + ') .alts ul').append('<li>' + i + '</li>')
+
+					if j is quizdrag.data[randy].alts.length - 1 then quizdrag.inOrder++
+
+			.catch (fromReject) -> return
+
+		timer: ->
+			s = 60
+			starttimer = setInterval ->
+				if quizdrag.paused isnt true
+					if s > 0 then s--
+					if s <= 0
+						s = 0
+						clearInterval(quizdrag.starttimer)
+
+						$('.dimmer').fadeIn()
+						$('.modal').html('<h1>Acabou o tempo!</h1><p>Clique no botão abaixo para tentar mais uma vez.</p><button class="again">Jogar novamente</button>')
+
+					$('.bar .innerbar').css { height: (100 / 60) * s + '%' }
+			, 1000
+
 	func =
 		help: ->
+			if sets.quizdrag is true then quizdrag.paused = true
 			audio.clique.play()
 			$('.dimmer').fadeIn()
 			$('.modal').html('<h1>Ajuda</h1><p></p><button class="dismiss">Fechar</button>')
@@ -495,6 +661,7 @@ $ ->
 				else if trueORfalse.score is 1 then $('.modal h1').html('Você acertou uma questão!')
 
 		dismiss: ->
+			if sets.quizdrag is true then quizdrag.paused = false
 			audio.clique.play()
 			$('.dimmer').fadeOut()
 
@@ -505,6 +672,7 @@ $ ->
 			slideshow.start()
 			trueORfalse.start()
 			dragdrop.start()
+			quizdrag.start()
 
 			func.dismiss()
 			$('.content').fadeIn()
