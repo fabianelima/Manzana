@@ -1,4 +1,4 @@
-# MANZANA 0.1
+# MANZANA 0.3
 O novo framework para desenvolvimento de objetos de aprendizagem do NEAD
 
 -----
@@ -13,9 +13,11 @@ No momento, Manzana vem com módulos que permitem configurar trilha sonora de fu
 sets =
   audio: false
   clickarea: false
-  quiz: true
+  quiz: false
   trueORfalse: false
   slideshow: false
+  dragdrop: false
+  quizdrag: true
 ```
 
 É possível habilitar mais de um módulo ao mesmo tempo, mas é preciso fazer os ajustes necessários no restante da interação para que ela funcione a contento.
