@@ -36,7 +36,7 @@
   });
 
   $(function() {
-    var audio, clickarea, dragdrop, func, quiz, quizdrag, sets, slideshow, trueORfalse;
+    var audio, clickarea, dragdrop, func, quiz, quizdrag, sets, slideshow, trueORfalse, vblocks;
     sets = {
       audio: false,
       clickarea: false,
@@ -44,7 +44,8 @@
       trueORfalse: false,
       slideshow: false,
       dragdrop: false,
-      quizdrag: true
+      quizdrag: false,
+      vblocks: true
     };
     audio = {
       trilha: new Audio('assets/audio/trilha.mp3'),
@@ -632,6 +633,49 @@
         }, 1000);
       }
     };
+    vblocks = {
+      data: [
+        {
+          tit: 'Título do quadro',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }, {
+          tit: 'Título do quadro',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }, {
+          tit: 'Título do quadro',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }, {
+          tit: 'Título do quadro',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }, {
+          tit: 'Título do quadro',
+          txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+        }
+      ],
+      start: function() {
+        var i, j, k, len, ref, results;
+        if (sets.vblocks === true) {
+          $('.content').css({
+            overflowY: 'auto'
+          });
+          $('.content').append('<div class="vblocks"></div>');
+          ref = vblocks.data;
+          results = [];
+          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+            i = ref[j];
+            results.push($('.vblocks').append('<section id="b' + j + '"> <div> <h2>' + vblocks.data[j].tit + '</h2> </div> <div>' + vblocks.data[j].txt + '<button class="back"></button> </div> </section>'));
+          }
+          return results;
+        }
+      },
+      showM: function($el) {
+        $('.vblocks section div:nth-child(1)').fadeIn();
+        return $('.vblocks section:nth-child(' + ($el.index() + 1) + ') div:nth-child(1)').fadeOut();
+      },
+      backIt: function() {
+        return $('.vblocks section div:nth-child(1)').fadeIn();
+      }
+    };
     func = {
       help: function() {
         if (sets.quizdrag === true) {
@@ -684,6 +728,7 @@
         trueORfalse.start();
         dragdrop.start();
         quizdrag.start();
+        vblocks.start();
         func.dismiss();
         return $('.content').fadeIn();
       }
@@ -729,6 +774,16 @@
     $(document).on('click', '.nxt', function() {
       if (sets.trueORfalse === true) {
         return trueORfalse.nxt();
+      }
+    });
+    $(document).on('click', '.vblocks section div:nth-child(1)', function() {
+      if (sets.vblocks === true) {
+        return vblocks.showM($(this).parent());
+      }
+    });
+    $(document).on('click', '.vblocks .back', function() {
+      if (sets.vblocks === true) {
+        return vblocks.backIt();
       }
     });
     $(document).on('click', '.start', function() {

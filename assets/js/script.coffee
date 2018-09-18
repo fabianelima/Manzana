@@ -36,7 +36,8 @@ $ ->
 		trueORfalse: false
 		slideshow: false
 		dragdrop: false
-		quizdrag: true
+		quizdrag: false
+		vblocks: true
 
 	audio =
 		trilha: new Audio('assets/audio/trilha.mp3')
@@ -633,6 +634,55 @@ $ ->
 					$('.bar .innerbar').css { height: (100 / 60) * s + '%' }
 			, 1000
 
+	vblocks =
+		data: [
+			{
+				tit: 'Título do quadro'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+			}
+			{
+				tit: 'Título do quadro'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+			}
+			{
+				tit: 'Título do quadro'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+			}
+			{
+				tit: 'Título do quadro'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+			}
+			{
+				tit: 'Título do quadro'
+				txt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+			}
+		]
+
+		start: ->
+			if sets.vblocks is true
+				$('.content').css { overflowY: 'auto' }
+				$('.content').append('<div class="vblocks"></div>')
+
+				for i, j in vblocks.data
+					$('.vblocks').append('
+						<section id="b' + j + '">
+							<div>
+								<h2>' + vblocks.data[j].tit + '</h2>
+							</div>
+							<div>
+								' + vblocks.data[j].txt + '
+								<button class="back"></button>
+							</div>
+						</section>
+					')
+
+		showM: ($el) ->
+			$('.vblocks section div:nth-child(1)').fadeIn()
+			$('.vblocks section:nth-child(' + ($el.index() + 1) + ') div:nth-child(1)').fadeOut()
+
+		backIt: ->
+			$('.vblocks section div:nth-child(1)').fadeIn()
+
 	func =
 		help: ->
 			if sets.quizdrag is true then quizdrag.paused = true
@@ -673,6 +723,7 @@ $ ->
 			trueORfalse.start()
 			dragdrop.start()
 			quizdrag.start()
+			vblocks.start()
 
 			func.dismiss()
 			$('.content').fadeIn()
@@ -692,6 +743,9 @@ $ ->
 
 	$(document).on 'click', '.true, .false', -> if sets.trueORfalse is true then trueORfalse.verify $(this)
 	$(document).on 'click', '.nxt', -> if sets.trueORfalse is true then trueORfalse.nxt()
+
+	$(document).on 'click', '.vblocks section div:nth-child(1)', -> if sets.vblocks is true then vblocks.showM $(this).parent()
+	$(document).on 'click', '.vblocks .back', -> if sets.vblocks is true then vblocks.backIt()
 
 	$(document).on 'click', '.start', -> func.start()
 	$(document).on 'click', '.help', -> func.help()

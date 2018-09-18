@@ -431,6 +431,54 @@ main {
 				}
 			}
 		}
+
+		.vblocks {
+			position: relative;
+			width: 100%;
+			height: 100%;
+
+			section {
+				position: relative;
+				width: 90%;
+				margin: 2.5% 5%;
+				border: 0.1em solid @maincolor;
+				border-radius: 0.5em;
+				overflow: hidden;
+				cursor: pointer;
+				float: left;
+			}
+			section:first-child { margin-top: 5%; }
+			section:last-child { margin-bottom: 5%; }
+
+			div {
+				position: relative;
+				width: 90%;
+				padding: 5%;
+				background: white;
+				text-align: center;
+
+				.back {
+					position: absolute;
+					padding: 0;
+					margin-top: 0;
+					border-radius: 0;
+					border-top-left-radius: 0.5em;
+					width: 5.55%;
+					height: 2.5em;
+					border: 0.6em solid @maincolor;
+					z-index: 5;
+					bottom: 0;
+					right: 0;
+					background: @maincolor url(../img/back.svg) no-repeat;
+				}
+			}
+			div:nth-child(1) {
+				position: absolute;
+				height: 90%;
+				z-index: 4;
+			}
+			div:nth-child(2) { z-index: 3; }
+		}
 	}
 
 	.blink { animation: blink 0.5s linear infinite; }
