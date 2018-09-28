@@ -1,6 +1,6 @@
 
 /*
-	MANZANA v0.3
+	MANZANA v0.4
 	----------------------------------------------
 	Desenvolvido em CoffeeScript por Fabiane Lima
 
