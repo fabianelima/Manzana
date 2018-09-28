@@ -39,13 +39,13 @@
     var audio, clickarea, dragdrop, func, quiz, quizdrag, sets, slideshow, trueORfalse, vblocks;
     sets = {
       audio: false,
-      clickarea: false,
+      clickarea: true,
       quiz: false,
       trueORfalse: false,
       slideshow: false,
       dragdrop: false,
       quizdrag: false,
-      vblocks: true
+      vblocks: false
     };
     audio = {
       trilha: new Audio('assets/audio/trilha.mp3'),
@@ -79,35 +79,37 @@
     clickarea = {
       pro: void 0,
       count: 0,
-      ctrl: [],
-      resp: [],
       data: [
         {
           txt: '1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          pos: [50, 30]
+          pos: [50, 30],
+          stt: false
         }, {
           txt: '2. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          pos: [20, 20]
+          pos: [20, 20],
+          stt: false
         }, {
           txt: '3. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          pos: [10, 30]
+          pos: [10, 30],
+          stt: false
         }, {
           txt: '4. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          pos: [30, 70]
+          pos: [30, 70],
+          stt: false
         }, {
           txt: '5. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          pos: [50, 50]
+          pos: [50, 50],
+          stt: false
         }
       ],
       start: function() {
-        var i, k, len, ref, results;
+        var i, l, len, ref, results;
         if (sets.clickarea === true) {
-          $('.content').append('<div class="clickarea"></div>');
+          $('.content').append('<div class="clickarea"></div><button class="end">Concluir</button>');
           ref = clickarea.data;
           results = [];
-          for (k = 0, len = ref.length; k < len; k++) {
-            i = ref[k];
-            clickarea.resp.push(clickarea.data.indexOf(i));
+          for (l = 0, len = ref.length; l < len; l++) {
+            i = ref[l];
             $('.clickarea').append('<div></div>');
             $('.clickarea div:nth-child(' + (clickarea.count + 1) + ')').css({
               top: clickarea.data[clickarea.count].pos[0] + '%',
@@ -119,7 +121,7 @@
         }
       },
       showC: function($el) {
-        clickarea.ctrl.push($el.index());
+        clickarea.data[$el.index()].stt = true;
         $el.css({
           pointerEvents: 'none',
           opacity: '0.6'
@@ -128,24 +130,24 @@
         return $('.modal').html(clickarea.data[$el.index()].txt + '<button class="dismiss callend">Fechar</button>');
       },
       callEnd: function() {
-        var i, j, k, len, ref, results;
-        if (clickarea.ctrl.length !== clickarea.data.length) {
-          return false;
-        } else {
-          ref = clickarea.ctrl;
-          results = [];
-          for (j = k = 0, len = ref.length; k < len; j = ++k) {
-            i = ref[j];
-            if (clickarea.ctrl.indexOf(i) === clickarea.resp[j]) {
-              results.push(setTimeout(function() {
-                return func.end();
-              }, 1000));
+        var i, k, l, len, ref, results;
+        k = 0;
+        ref = clickarea.data;
+        results = [];
+        for (l = 0, len = ref.length; l < len; l++) {
+          i = ref[l];
+          if (i.stt === true) {
+            k++;
+            if (k === clickarea.data.length) {
+              results.push($('.end').fadeIn());
             } else {
               results.push(void 0);
             }
+          } else {
+            results.push(void 0);
           }
-          return results;
         }
+        return results;
       }
     };
     quiz = {
@@ -249,10 +251,10 @@
             return reject();
           }
         }).then(function(fromResolve) {
-          var i, j, k, len, ref, results;
+          var i, j, l, len, ref, results;
           ref = quiz.data[randy].alts;
           results = [];
-          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+          for (j = l = 0, len = ref.length; l < len; j = ++l) {
             i = ref[j];
             $('.quiz section:nth-child(' + quiz.inOrder + ') .alts ul').append('<li>' + i + '</li>');
             if (j === quiz.data[randy].alts.length - 1) {
@@ -298,15 +300,15 @@
         }
       ],
       start: function() {
-        var i, j, k, len, ref, results;
+        var i, j, l, len, ref, results;
         if (sets.trueORfalse === true) {
           $('.content').append('<div class="t-or-f"></div>');
           j = 0;
           func.dismiss();
           ref = trueORfalse.data;
           results = [];
-          for (k = 0, len = ref.length; k < len; k++) {
-            i = ref[k];
+          for (l = 0, len = ref.length; l < len; l++) {
+            i = ref[l];
             $('.t-or-f').append('<section> <div class="txt"> <h1>' + trueORfalse.data[j].titl + '</h1> <p>' + trueORfalse.data[j].text + '</p> </div> <div class="ctrl"> <button class="true">verdadeiro</button> <button class="false">falso</button> </div> </section>');
             results.push(j++);
           }
@@ -368,12 +370,12 @@
         }
       ],
       start: function() {
-        var i, j, k, len, ref, results;
+        var i, j, l, len, ref, results;
         if (sets.slideshow === true) {
           $('.content').append('<div class="slideshow"> <div class="slides"></div> <div class="ctrl"> <button class="next">></button> <button class="prev"><</button> </div> </div>');
           ref = slideshow.data;
           results = [];
-          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+          for (j = l = 0, len = ref.length; l < len; j = ++l) {
             i = ref[j];
             results.push($('.slides').append('<section> <div>' + slideshow.data[j].txt + '</div> <img src="' + slideshow.data[j].img + '"> </section>'));
           }
@@ -413,14 +415,14 @@
       endit: [],
       data: [['draggable 1', 'draggable 2', 'draggable 3', 'draggable 4', 'draggable 5', 'draggable 6'], ['draggable 1', 'draggable 2', 'draggable 3', 'draggable 4', 'draggable 5', 'draggable 6']],
       start: function() {
-        var i, k, len, ref;
+        var i, l, len, ref;
         if (sets.dragdrop === true) {
           $('.content').append('<div class="drag-drop"> <div class="draggie"></div> <div class="droppie"></div> </div>');
           func.dismiss();
           dragdrop.rNumber();
           ref = dragdrop.data[1];
-          for (k = 0, len = ref.length; k < len; k++) {
-            i = ref[k];
+          for (l = 0, len = ref.length; l < len; l++) {
+            i = ref[l];
             $('.droppie').append('<div>' + i + '</div>');
           }
           dragdrop.draggie();
@@ -597,10 +599,10 @@
             return reject();
           }
         }).then(function(fromResolve) {
-          var i, j, k, len, ref, results;
+          var i, j, l, len, ref, results;
           ref = quizdrag.data[randy].alts;
           results = [];
-          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+          for (j = l = 0, len = ref.length; l < len; j = ++l) {
             i = ref[j];
             $('.quizdrag .quizd section:nth-child(' + quizdrag.inOrder + ') .alts ul').append('<li>' + i + '</li>');
             if (j === quizdrag.data[randy].alts.length - 1) {
@@ -653,7 +655,7 @@
         }
       ],
       start: function() {
-        var i, j, k, len, ref, results;
+        var i, j, l, len, ref, results;
         if (sets.vblocks === true) {
           $('.content').css({
             overflowY: 'auto'
@@ -661,7 +663,7 @@
           $('.content').append('<div class="vblocks"></div>');
           ref = vblocks.data;
           results = [];
-          for (j = k = 0, len = ref.length; k < len; j = ++k) {
+          for (j = l = 0, len = ref.length; l < len; j = ++l) {
             i = ref[j];
             results.push($('.vblocks').append('<section id="b' + j + '"> <div> <h2>' + vblocks.data[j].tit + '</h2> </div> <div>' + vblocks.data[j].txt + '<button class="back"></button> </div> </section>'));
           }

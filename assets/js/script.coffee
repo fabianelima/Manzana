@@ -31,13 +31,13 @@ $(window).on 'load', -> preload(imgs)
 $ ->
 	sets =
 		audio: false
-		clickarea: false
+		clickarea: true
 		quiz: false
 		trueORfalse: false
 		slideshow: false
 		dragdrop: false
 		quizdrag: false
-		vblocks: true
+		vblocks: false
 
 	audio =
 		trilha: new Audio('assets/audio/trilha.mp3')
@@ -67,36 +67,38 @@ $ ->
 	clickarea =
 		pro: undefined
 		count: 0
-		ctrl: []
-		resp: []
 		data:	[
 			{
 				txt: '1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 				pos: [50, 30]
+				stt: false
 			}
 			{
 				txt: '2. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 				pos: [20, 20]
+				stt: false
 			}
 			{
 				txt: '3. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 				pos: [10, 30]
+				stt: false
 			}
 			{
 				txt: '4. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 				pos: [30, 70]
+				stt: false
 			}
 			{
 				txt: '5. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 				pos: [50, 50]
+				stt: false
 			}]
 
 		start: ->
 			if sets.clickarea is true
-				$('.content').append('<div class="clickarea"></div>')
+				$('.content').append('<div class="clickarea"></div><button class="end">Concluir</button>')
 
 				for i in clickarea.data
-					clickarea.resp.push clickarea.data.indexOf(i)
 					$('.clickarea').append('<div></div>')
 					$('.clickarea div:nth-child(' + (clickarea.count + 1) + ')').css
 						top: clickarea.data[clickarea.count].pos[0] + '%'
@@ -104,20 +106,19 @@ $ ->
 					clickarea.count++
 
 		showC: ($el) ->
-			clickarea.ctrl.push $el.index()
+			clickarea.data[$el.index()].stt = true
 			$el.css { pointerEvents: 'none', opacity: '0.6' }
 
 			$('.dimmer').fadeIn()
 			$('.modal').html(clickarea.data[$el.index()].txt + '<button class="dismiss callend">Fechar</button>')
 
 		callEnd: ->
-			if clickarea.ctrl.length isnt clickarea.data.length then return false
-			else
-				for i, j in clickarea.ctrl
-					if clickarea.ctrl.indexOf(i) is clickarea.resp[j]
-						setTimeout ->
-							func.end()
-						, 1000
+			k = 0
+			for i in clickarea.data
+				if i.stt is true
+					k++
+					if k is clickarea.data.length
+						$('.end').fadeIn()
 
 	quiz =
 		alt: undefined
