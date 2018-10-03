@@ -78,7 +78,6 @@
     };
     clickarea = {
       pro: void 0,
-      count: 0,
       data: [
         {
           txt: '1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
@@ -103,19 +102,18 @@
         }
       ],
       start: function() {
-        var i, l, len, ref, results;
+        var i, j, l, len, ref, results;
         if (sets.clickarea === true) {
           $('.content').append('<div class="clickarea"></div><button class="end">Concluir</button>');
           ref = clickarea.data;
           results = [];
-          for (l = 0, len = ref.length; l < len; l++) {
-            i = ref[l];
+          for (j = l = 0, len = ref.length; l < len; j = ++l) {
+            i = ref[j];
             $('.clickarea').append('<div></div>');
-            $('.clickarea div:nth-child(' + (clickarea.count + 1) + ')').css({
-              top: clickarea.data[clickarea.count].pos[0] + '%',
-              left: clickarea.data[clickarea.count].pos[1] + '%'
-            });
-            results.push(clickarea.count++);
+            results.push($('.clickarea div:nth-child(' + (j + 1) + ')').css({
+              top: clickarea.data[j].pos[0] + '%',
+              left: clickarea.data[j].pos[1] + '%'
+            }));
           }
           return results;
         }

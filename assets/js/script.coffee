@@ -66,7 +66,6 @@ $ ->
 
 	clickarea =
 		pro: undefined
-		count: 0
 		data:	[
 			{
 				txt: '1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -98,12 +97,11 @@ $ ->
 			if sets.clickarea is true
 				$('.content').append('<div class="clickarea"></div><button class="end">Concluir</button>')
 
-				for i in clickarea.data
+				for i, j in clickarea.data
 					$('.clickarea').append('<div></div>')
-					$('.clickarea div:nth-child(' + (clickarea.count + 1) + ')').css
-						top: clickarea.data[clickarea.count].pos[0] + '%'
-						left: clickarea.data[clickarea.count].pos[1] + '%'
-					clickarea.count++
+					$('.clickarea div:nth-child(' + (j + 1) + ')').css
+						top: clickarea.data[j].pos[0] + '%'
+						left: clickarea.data[j].pos[1] + '%'
 
 		showC: ($el) ->
 			clickarea.data[$el.index()].stt = true
