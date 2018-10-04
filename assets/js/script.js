@@ -677,6 +677,7 @@
       }
     };
     func = {
+      status: false,
       help: function() {
         if (sets.quizdrag === true) {
           quizdrag.paused = true;
@@ -721,16 +722,22 @@
         return $('.dimmer').fadeOut();
       },
       start: function() {
-        audio.start();
-        clickarea.start();
-        quiz.start();
-        slideshow.start();
-        trueORfalse.start();
-        dragdrop.start();
-        quizdrag.start();
-        vblocks.start();
-        func.dismiss();
-        return $('.content').fadeIn();
+        if (func.status === false) {
+          func.status = true;
+          $('.intro').fadeOut();
+          return $('.modal').delay(300).fadeIn();
+        } else {
+          audio.start();
+          clickarea.start();
+          quiz.start();
+          slideshow.start();
+          trueORfalse.start();
+          dragdrop.start();
+          quizdrag.start();
+          vblocks.start();
+          func.dismiss();
+          return $('.content').fadeIn();
+        }
       }
     };
     $(document).on('click', '.audio', function() {

@@ -683,6 +683,7 @@ $ ->
 			$('.vblocks section div:nth-child(1)').fadeIn()
 
 	func =
+		status: false
 		help: ->
 			if sets.quizdrag is true then quizdrag.paused = true
 			audio.clique.play()
@@ -715,17 +716,23 @@ $ ->
 			$('.dimmer').fadeOut()
 
 		start: ->
-			audio.start()
-			clickarea.start()
-			quiz.start()
-			slideshow.start()
-			trueORfalse.start()
-			dragdrop.start()
-			quizdrag.start()
-			vblocks.start()
+			if func.status is false
+				func.status = true
+				$('.intro').fadeOut()
+				$('.modal').delay(300).fadeIn()
 
-			func.dismiss()
-			$('.content').fadeIn()
+			else
+				audio.start()
+				clickarea.start()
+				quiz.start()
+				slideshow.start()
+				trueORfalse.start()
+				dragdrop.start()
+				quizdrag.start()
+				vblocks.start()
+
+				func.dismiss()
+				$('.content').fadeIn()
 
 
 # ----- Eventos ----- #
