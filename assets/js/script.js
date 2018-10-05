@@ -540,6 +540,9 @@
         return $('.draggie').children().draggable({
           cursor: 'move',
           revert: function(event, ui) {
+            if (!event) {
+              quizdrag.error++;
+            }
             this.data('uiDraggable').originalPosition = {
               top: 0,
               left: 0
@@ -561,11 +564,7 @@
           drop: function(e, ui) {
             $('.ui-draggable-dragging, .droppie').fadeOut();
             quizdrag.alt = $(this).index();
-            if (quizdrag.alt === quizdrag.data[quizdrag.ctrl[quizdrag.count]].answ) {
-              quizdrag.score++;
-            } else {
-              quizdrag.error++;
-            }
+            quizdrag.score++;
             quizdrag.count++;
             if (quizdrag.count < quizdrag.data.length) {
               func.dismiss();

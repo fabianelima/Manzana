@@ -562,6 +562,7 @@ $ ->
 			$('.draggie').children().draggable
 				cursor: 'move'
 				revert: (event, ui) ->
+					if !event then quizdrag.error++
 					this.data('uiDraggable').originalPosition =
 						top: 0
 						left: 0
@@ -577,10 +578,7 @@ $ ->
 				drop: (e, ui) ->
 					$('.ui-draggable-dragging, .droppie').fadeOut()
 					quizdrag.alt = $(this).index()
-
-					if quizdrag.alt is quizdrag.data[quizdrag.ctrl[quizdrag.count]].answ then quizdrag.score++
-					else quizdrag.error++
-
+					quizdrag.score++
 					quizdrag.count++
 
 					if quizdrag.count < quizdrag.data.length
