@@ -31,12 +31,12 @@ $(window).on 'load', -> preload(imgs)
 $ ->
 	sets =
 		audio: false
-		clickarea: true
+		clickarea: false
 		quiz: false
 		trueORfalse: false
 		slideshow: false
 		dragdrop: false
-		quizdrag: false
+		quizdrag: true
 		vblocks: false
 
 	audio =
@@ -619,16 +619,17 @@ $ ->
 		timer: ->
 			s = 60
 			starttimer = setInterval ->
-				if quizdrag.paused isnt true
-					if s > 0 then s--
-					if s <= 0
-						s = 0
-						clearInterval(quizdrag.starttimer)
+				if s isnt 0
+					if quizdrag.paused isnt true
+						if s > 0 then s--
+						if s <= 0
+							s = 0
+							clearInterval(quizdrag.starttimer)
 
-						$('.dimmer').fadeIn()
-						$('.modal').html('<h1>Acabou o tempo!</h1><p>Clique no botão abaixo para tentar mais uma vez.</p><button class="again">Jogar novamente</button>')
+							$('.dimmer').fadeIn()
+							$('.modal').html('<h1>Acabou o tempo!</h1><p>Clique no botão abaixo para tentar mais uma vez.</p><button class="again">Jogar novamente</button>')
 
-					$('.bar .innerbar').css { height: (100 / 60) * s + '%' }
+						$('.bar .innerbar').css { height: (100 / 60) * s + '%' }
 			, 1000
 
 	vblocks =
