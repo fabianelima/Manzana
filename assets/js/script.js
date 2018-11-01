@@ -42,9 +42,9 @@
       clickarea: false,
       quiz: false,
       trueORfalse: false,
-      slideshow: false,
+      slideshow: true,
       dragdrop: false,
-      quizdrag: true,
+      quizdrag: false,
       vblocks: false
     };
     audio = {
@@ -370,7 +370,7 @@
       start: function() {
         var i, j, l, len, ref, results;
         if (sets.slideshow === true) {
-          $('.content').append('<div class="slideshow"> <div class="slides"></div> <div class="ctrl"> <button class="next">></button> <button class="prev"><</button> </div> </div>');
+          $('.content').append('<div class="slideshow"> <div class="slides"></div> <div class="ctrl"> <button class="next"></button> <button class="prev"></button> </div> </div>');
           ref = slideshow.data;
           results = [];
           for (j = l = 0, len = ref.length; l < len; j = ++l) {

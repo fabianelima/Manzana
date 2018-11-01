@@ -34,9 +34,9 @@ $ ->
 		clickarea: false
 		quiz: false
 		trueORfalse: false
-		slideshow: false
+		slideshow: true
 		dragdrop: false
-		quizdrag: true
+		quizdrag: false
 		vblocks: false
 
 	audio =
@@ -357,8 +357,8 @@ $ ->
 				<div class="slideshow">
 					<div class="slides"></div>
 					<div class="ctrl">
-						<button class="next">></button>
-						<button class="prev"><</button>
+						<button class="next"></button>
+						<button class="prev"></button>
 					</div>
 				</div>')
 
